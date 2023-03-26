@@ -1,9 +1,11 @@
 package org.carrental.mapper;
 
 import org.carrental.domain.User;
+import org.carrental.domain.VehicleOwner;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserMapper implements IMapper{
@@ -14,7 +16,16 @@ public class UserMapper implements IMapper{
 
     @Override
     public List resultSetToList(ResultSet rs) throws SQLException {
-        return null;
+        List<User> userList = new ArrayList<>();
+        while (rs.next()){
+            User user = User.builder()
+                    .id(rs.getInt(ID))
+                    .username(rs.getString(USERNAME))
+                    .password(rs.getString(PASS))
+                    .build();
+            userList.add(user);
+        }
+        return userList;
     }
 
     @Override

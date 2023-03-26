@@ -7,7 +7,10 @@ import org.carrental.mapper.UserMapper;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
+
+import static org.carrental.dao.SqlQueryConstant.*;
 
 public class UserDAO extends BaseDAO implements ICrud<User>{
     private final IMapper<User> userMapper = new UserMapper();
@@ -25,26 +28,61 @@ public class UserDAO extends BaseDAO implements ICrud<User>{
 
     @Override
     public void insert(User obj) {
+        try {
+            PreparedStatement ps = conn.prepareStatement(INSERT_USER);
+            ps.setString(1,obj.getUsername());
+            ps.setString(2,obj.getPassword());
 
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public List<User> getAll() {
-        return null;
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(GET_ALL_USER);
+            return userMapper.resultSetToList(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public User getById(Long id) {
-        return null;
+        try {
+            PreparedStatement ps = conn.prepareStatement(GET_USER_BY_ID);
+            ps.setInt(1,id.intValue());
+            ResultSet rs = ps.executeQuery();
+            return userMapper.resultSetToObject(rs);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void update(User obj, Long id) {
-
+        try {
+            PreparedStatement ps = conn.prepareStatement(UPDATE_USER_BY_ID);
+            ps.setString(1,obj.getUsername());
+            ps.setInt(2,id.intValue());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void deleteByID(Long id) {
-
+        try {
+            PreparedStatement ps = conn.prepareStatement(DELETE_USER_BY_ID);
+            ps.setInt(1,id.intValue());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

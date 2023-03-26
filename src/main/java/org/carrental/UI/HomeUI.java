@@ -6,7 +6,7 @@ import java.awt.*;
 public class HomeUI {
 
     public HomeUI(){
-        JFrame frame = new JFrame();
+        JFrame frame = new JFrame("Car Rental-Home");
         frame.setLayout(new FlowLayout(FlowLayout.CENTER,200,40));
         JButton customerbtn = new JButton("Customer");
         JButton vehiclebtn = new JButton("Vehicle");

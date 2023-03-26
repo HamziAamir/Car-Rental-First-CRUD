@@ -12,7 +12,7 @@ public class CustomerUI {
         JPanel centerpanel = new JPanel(new BorderLayout(10,10));
         frame.setLayout(new BorderLayout());
         northpanel.setLayout(new FlowLayout());
-        JTextField searchtf = new JTextField("Search Here For your DATA");
+        JTextField searchtf = new JTextField(50);
         JButton searchbt = new JButton("Search");
         JButton addbt = new JButton("Add");
         JButton editbt = new JButton("Edit");
