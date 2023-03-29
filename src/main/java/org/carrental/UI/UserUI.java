@@ -1,9 +1,15 @@
 package org.carrental.UI;
 
+import org.carrental.service.UserService;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class UserUI {
+    UserService userService = new UserService();
     public UserUI(){
         JFrame frame = new JFrame("Users DataBase");
         JPanel northpanel = new JPanel();
@@ -11,23 +17,19 @@ public class UserUI {
         JPanel centerpanel = new JPanel(new BorderLayout(10,10));
         frame.setLayout(new BorderLayout());
         northpanel.setLayout(new FlowLayout());
-        JTextField searchtf = new JTextField("Search Here For your DATA");
-        JButton searchbt = new JButton("Search");
+        JTextField searchtf = new JTextField(50);
         JButton addbt = new JButton("Add");
         JButton editbt = new JButton("Edit");
         JButton deletebt = new JButton("Delete");
         JButton backbt = new JButton("BACK");
 
         northpanel.add(searchtf);
-        northpanel.add(searchbt);
         eastpanel.add(addbt);
         eastpanel.add(editbt);
         eastpanel.add(deletebt);
         eastpanel.add(backbt);
-        String data[][]={ {"101","Amit","670000"},
-                {"102","Jai","780000"},
-                {"101","Sachin","700000"}};
-        String column[]={"ID","NAME","SALARY"};
+        String data[][]= userService.getAllUserForJTable();
+        String column[]={"User_Name","Passwords"};
         JTable jt=new JTable(data,column);
         JScrollPane sp=new JScrollPane(jt);
         centerpanel.add(sp,BorderLayout.CENTER);
@@ -38,10 +40,32 @@ public class UserUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        addbt.addActionListener(e->{
+            frame.dispose();
+            new AddUserUI();
+        });
 
         backbt.addActionListener((event)->{
             frame.dispose();
             new HomeUI();
+        });
+        searchtf.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String[][] data =  userService.searchByName(searchtf.getText());
+                DefaultTableModel dtm = new DefaultTableModel(data,column);
+                jt.setModel(dtm);
+
+            }
         });
     }
 }

@@ -11,15 +11,13 @@ public class VehicleUI {
         JPanel centerpanel = new JPanel(new BorderLayout(10,10));
         frame.setLayout(new BorderLayout());
         northpanel.setLayout(new FlowLayout());
-        JTextField searchtf = new JTextField("Search Here For your DATA");
-        JButton searchbt = new JButton("Search");
+        JTextField searchtf = new JTextField(50);
         JButton addbt = new JButton("Add");
         JButton editbt = new JButton("Edit");
         JButton deletebt = new JButton("Delete");
         JButton backbt = new JButton("BACK");
 
         northpanel.add(searchtf);
-        northpanel.add(searchbt);
         eastpanel.add(addbt);
         eastpanel.add(editbt);
         eastpanel.add(deletebt);

@@ -32,7 +32,7 @@ public class SqlQueryConstant {
     //USER QUERIES
     public final static String GET_USER_BY_USERNAME_PASSWORD = "select * from user where username = ? and pass = ?";
     public final static String INSERT_USER =
-            "insert into vehicle_owner(username,pass)"+
+            "insert into user(username,pass)"+
                     "values (?,?)";
     public final static String GET_ALL_USER = "select * from user";
     public final static String GET_USER_BY_ID = "select * from user where id = ?";

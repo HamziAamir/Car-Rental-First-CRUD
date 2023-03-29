@@ -51,10 +51,10 @@ public class Main {
         vehicleDAO.getAll().forEach(System.out::println);
         vehicleDAO.deleteByID(4L);
         vehicleDAO.getAll().forEach(System.out::println);*/
-        VehicleOwnerDAO vehicleOwnerDAO = new VehicleOwnerDAO();
+//        VehicleOwnerDAO vehicleOwnerDAO = new VehicleOwnerDAO();
 //        vehicleOwnerDAO.getAll().forEach(System.out::println);
-        UserDAO userDAO = new UserDAO();
-        userDAO.getAll().forEach(System.out::println);
-
+        /*UserDAO userDAO = new UserDAO();
+        userDAO.getAll().forEach(System.out::println);*/
+        new LOGINUI();
     }
 }

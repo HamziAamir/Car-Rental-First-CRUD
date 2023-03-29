@@ -85,4 +85,13 @@ public class UserDAO extends BaseDAO implements ICrud<User>{
             throw new RuntimeException(e);
         }
     }
+    public List<User> getByName(String name) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("select * from user where username like '%"+name+"%'");
+            ResultSet rs = ps.executeQuery();
+            return userMapper.resultSetToList(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
