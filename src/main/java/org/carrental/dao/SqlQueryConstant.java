@@ -36,7 +36,7 @@ public class SqlQueryConstant {
                     "values (?,?)";
     public final static String GET_ALL_USER = "select * from user";
     public final static String GET_USER_BY_ID = "select * from user where id = ?";
-    public final static String UPDATE_USER_BY_ID = "update user set o_name = ?  where id = ?";
+    public final static String UPDATE_USER_BY_ID = "update user set username = ?  where id = ?";
     public final static String DELETE_USER_BY_ID = "delete from user where id = ?";
 
 }

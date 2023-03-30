@@ -1,9 +1,15 @@
 package org.carrental.UI;
 
+import org.carrental.service.VehicleOwnerService;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class VehicleOwnerUI {
+    VehicleOwnerService vehicleOwnerService = new VehicleOwnerService();
     public VehicleOwnerUI(){
         JFrame frame = new JFrame("Vehicle Owners DataBase");
         JPanel northpanel = new JPanel();
@@ -22,10 +28,8 @@ public class VehicleOwnerUI {
         eastpanel.add(editbt);
         eastpanel.add(deletebt);
         eastpanel.add(backbt);
-        String data[][]={ {"101","Amit","670000"},
-                {"102","Jai","780000"},
-                {"101","Sachin","700000"}};
-        String column[]={"ID","NAME","SALARY"};
+        String data[][]= vehicleOwnerService.getAllVehicleOwnerForJTable();
+        String column[]={"NAME","PHONE_NUMBER","CNIC","ADDRESS","Commission"};
         JTable jt=new JTable(data,column);
         JScrollPane sp=new JScrollPane(jt);
         centerpanel.add(sp,BorderLayout.CENTER);
@@ -37,9 +41,32 @@ public class VehicleOwnerUI {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
+        addbt.addActionListener(e->{
+            frame.dispose();
+            new AddVehicleOwnerUI();
+        });
+
         backbt.addActionListener((event)->{
             frame.dispose();
             new HomeUI();
+        });
+        searchtf.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String[][] data =  vehicleOwnerService.searchByName(searchtf.getText());
+                DefaultTableModel dtm = new DefaultTableModel(data,column);
+                jt.setModel(dtm);
+
+            }
         });
     }
 }

@@ -30,7 +30,6 @@ public class CustomerService {
         }
         return data;
     }
-
     public void save(String name, String phone, String cnic, String address, String refPhoneNumber) {
 
         Customer customer = Customer.builder()
@@ -43,5 +42,4 @@ public class CustomerService {
 
         dao.insert(customer);
     }
-
 }
