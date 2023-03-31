@@ -1,6 +1,7 @@
 package org.carrental.dao;
 
 import org.carrental.domain.Vehicle;
+import org.carrental.domain.VehicleOwner;
 import org.carrental.mapper.VehicleMapper;
 
 import java.sql.PreparedStatement;
@@ -74,6 +75,15 @@ public class VehicleDAO extends BaseDAO implements ICrud<Vehicle> {
             PreparedStatement ps = conn.prepareStatement(DELETE_VEHICLE_BY_ID);
             ps.setInt(1,id.intValue());
             ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public List<Vehicle> getByName(String name) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("select * from vehicle where v_name like '%"+name+"%'");
+            ResultSet rs = ps.executeQuery();
+            return vehicleMapper.resultSetToList(rs);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
