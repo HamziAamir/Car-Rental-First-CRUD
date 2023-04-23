@@ -93,4 +93,12 @@ public class CustomerDAO extends BaseDAO implements ICrud<Customer>{
             throw new RuntimeException(e);
         }
     }
+//    public void deleteByName(String name) {
+//        try {
+//            PreparedStatement ps = conn.prepareStatement("delete from customer where c_name = "+name);
+//            ps.executeUpdate();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

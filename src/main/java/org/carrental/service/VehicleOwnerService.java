@@ -14,18 +14,19 @@ public class VehicleOwnerService {
 
     public String[][] getAllVehicleOwnerForJTable(){
         List<VehicleOwner> vehicleOwnerList = dao.getAll();
-        return transformToJTable(vehicleOwnerList,5);
+        return transformToJTable(vehicleOwnerList,6);
     }
 
     private String[][] transformToJTable(List<VehicleOwner> vehicleOwnerList,int columnSize){
         String[][] data = new String[vehicleOwnerList.size()][columnSize];
 
         for (int i = 0; i < vehicleOwnerList.size() ; i++) {
-            data[i][0] = vehicleOwnerList.get(i).getO_name();
-            data[i][1] = vehicleOwnerList.get(i).getPhoneNumber();
-            data[i][2] = vehicleOwnerList.get(i).getCnic();
-            data[i][3] = vehicleOwnerList.get(i).getAddress();
-            data[i][4] = Float.toString(vehicleOwnerList.get(i).getCommission());
+            data[i][0] = String.valueOf(vehicleOwnerList.get(i).getID());
+            data[i][1] = vehicleOwnerList.get(i).getO_name();
+            data[i][2] = vehicleOwnerList.get(i).getPhoneNumber();
+            data[i][3] = vehicleOwnerList.get(i).getCnic();
+            data[i][4] = vehicleOwnerList.get(i).getAddress();
+            data[i][5] = Float.toString(vehicleOwnerList.get(i).getCommission());
 
         }
         return data;
@@ -42,5 +43,7 @@ public class VehicleOwnerService {
 
         dao.insert(vehicleOwner);
     }
-
+    public void delete(String id){
+        dao.deleteByID(Long.parseLong(id));
+    }
 }

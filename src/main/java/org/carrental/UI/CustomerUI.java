@@ -33,7 +33,7 @@ public class CustomerUI {
 
 
         String data[][]= customerService.getAllCustomerForJTable();
-        String column[]={"NAME","PHONE_NUMBER","CNIC","ADDRESS","REF+PH_NO"};
+        String column[]={"ID","NAME","PHONE_NUMBER","CNIC","ADDRESS","REF+PH_NO"};
         JTable jt=new JTable(data,column);
         JScrollPane sp=new JScrollPane(jt);
         centerpanel.add(sp,BorderLayout.CENTER);
@@ -48,6 +48,10 @@ public class CustomerUI {
         addbt.addActionListener(e->{
             frame.dispose();
             new AddCustomerUI();
+        });
+        deletebt.addActionListener(e->{
+            frame.dispose();
+            new DeleteCustomerUI();
         });
 
         backbt.addActionListener((event)->{

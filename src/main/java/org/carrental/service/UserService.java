@@ -17,15 +17,16 @@ public class UserService {
 
     public String[][] getAllUserForJTable(){
         List<User> userList = dao.getAll();
-        return transformToJTable(userList,5);
+        return transformToJTable(userList,6);
     }
 
     private String[][] transformToJTable(List<User> userList,int columnSize){
         String[][] data = new String[userList.size()][columnSize];
 
         for (int i = 0; i < userList.size() ; i++) {
-            data[i][0] = userList.get(i).getUsername();
-            data[i][1] = userList.get(i).getPassword();
+            data[i][0] = String.valueOf(userList.get(i).getId());
+            data[i][1] = userList.get(i).getUsername();
+            data[i][2] = userList.get(i).getPassword();
         }
         return data;
     }
@@ -39,4 +40,9 @@ public class UserService {
 
         dao.insert(user);
     }
+
+
+        public void delete(String id){
+            dao.deleteByID(Long.parseLong(id));
+        }
 }

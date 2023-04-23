@@ -14,18 +14,19 @@ public class CustomerService {
 
     public String[][] getAllCustomerForJTable(){
         List<Customer> customerList = dao.getAll();
-        return transformToJTable(customerList,5);
+        return transformToJTable(customerList,6);
     }
 
     private String[][] transformToJTable(List<Customer> customerList,int columnSize){
         String[][] data = new String[customerList.size()][columnSize];
 
         for (int i = 0; i < customerList.size() ; i++) {
-            data[i][0] = customerList.get(i).getName();
-            data[i][1] = customerList.get(i).getPhoneNumber();
-            data[i][2] = customerList.get(i).getCnic();
-            data[i][3] = customerList.get(i).getAddress();
-            data[i][4] = customerList.get(i).getReferencePhoneNumber();
+            data[i][0] = String.valueOf(customerList.get(i).getId());
+            data[i][1] = customerList.get(i).getName();
+            data[i][2] = customerList.get(i).getPhoneNumber();
+            data[i][3] = customerList.get(i).getCnic();
+            data[i][4] = customerList.get(i).getAddress();
+            data[i][5] = customerList.get(i).getReferencePhoneNumber();
 
         }
         return data;
@@ -41,5 +42,8 @@ public class CustomerService {
                 .build();
 
         dao.insert(customer);
+    }
+    public void delete(String id){
+        dao.deleteByID(Long.parseLong(id));
     }
 }

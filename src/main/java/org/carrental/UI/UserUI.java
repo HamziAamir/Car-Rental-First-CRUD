@@ -29,7 +29,7 @@ public class UserUI {
         eastpanel.add(deletebt);
         eastpanel.add(backbt);
         String data[][]= userService.getAllUserForJTable();
-        String column[]={"User_Name","Passwords"};
+        String column[]={"ID","User_Name","Passwords"};
         JTable jt=new JTable(data,column);
         JScrollPane sp=new JScrollPane(jt);
         centerpanel.add(sp,BorderLayout.CENTER);
@@ -49,6 +49,11 @@ public class UserUI {
             frame.dispose();
             new HomeUI();
         });
+        deletebt.addActionListener(e->{
+            frame.dispose();
+            new DeleteUserUI();
+        });
+
         searchtf.addKeyListener(new KeyListener() {
 
             @Override
