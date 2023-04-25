@@ -38,5 +38,13 @@ public class SqlQueryConstant {
     public final static String GET_USER_BY_ID = "select * from user where id = ?";
     public final static String UPDATE_USER_BY_ID = "update user set username = ?  where id = ?";
     public final static String DELETE_USER_BY_ID = "delete from user where id = ?";
+    // Booking Queries
+    public final static String GET_ALL_BOOKINGS = "select * from booking";
+    public final static String GET_BOOKING_BY_ID = "select * from booking where id = ?";
+    //public final static String UPDATE_BOOKING_BY_ID = "update booking set c_name = ?  where id = ?";
+    public final static String DELETE_BOOKING_BY_ID = "delete from booking where id = ?";
 
+    public final static String INSERT_BOOKING =
+            "insert into booking(cid,vid,booking_date,price,booking_status)"+
+                    "values (?,?,?,?,?)";
 }

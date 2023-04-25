@@ -49,5 +49,9 @@ public class HomeUI {
             frame.dispose();
             new UserUI();
         });
+        bookingbtn.addActionListener((event)->{
+            frame.dispose();
+            new BookingUI();
+        });
     }
 }
