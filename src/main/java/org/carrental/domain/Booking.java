@@ -15,6 +15,10 @@ public class Booking {
     private int cid;
     private int vid;
     private Date bookingDate;
+    private Date completeDate;
     private Double price;
     private String bookingStatus;
+    Integer totalAmount;
+    Integer commission;
+    private String vehicleName;
 }

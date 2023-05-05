@@ -58,6 +58,10 @@ public class CustomerUI {
                 frame.dispose();
                 new HomeUI();
         });
+        editbt.addActionListener((event)->{
+            frame.dispose();
+            new EditcustomerUI();
+        });
         searchtf.addKeyListener(new KeyListener() {
 
             @Override

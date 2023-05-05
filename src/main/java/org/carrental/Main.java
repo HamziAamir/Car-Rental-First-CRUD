@@ -1,5 +1,6 @@
 package org.carrental;
 
+import org.carrental.UI.BookingUI;
 import org.carrental.UI.CustomerUI;
 import org.carrental.UI.HomeUI;
 import org.carrental.UI.LOGINUI;
@@ -7,6 +8,7 @@ import org.carrental.dao.CustomerDAO;
 import org.carrental.dao.UserDAO;
 import org.carrental.dao.VehicleDAO;
 import org.carrental.dao.VehicleOwnerDAO;
+import org.carrental.domain.Booking;
 import org.carrental.domain.Customer;
 import org.carrental.domain.User;
 import org.carrental.domain.Vehicle;
@@ -55,6 +57,6 @@ public class Main {
 //        vehicleOwnerDAO.getAll().forEach(System.out::println);
         /*UserDAO userDAO = new UserDAO();
         userDAO.getAll().forEach(System.out::println);*/
-        new LOGINUI();
+        new BookingUI();
     }
 }

@@ -49,7 +49,10 @@ public class VehicleOwnerUI {
             frame.dispose();
             new DeleteVehicleOwnerUI();
         });
-
+        editbt.addActionListener((event)->{
+            frame.dispose();
+            new EditVehicleOwnerUI();
+        });
         backbt.addActionListener((event)->{
             frame.dispose();
             new HomeUI();

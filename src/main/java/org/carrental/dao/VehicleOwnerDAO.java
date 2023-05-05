@@ -4,10 +4,7 @@ package org.carrental.dao;
 import org.carrental.domain.VehicleOwner;
 import org.carrental.mapper.VehicleOwnerMapper;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +80,39 @@ public class VehicleOwnerDAO extends BaseDAO implements ICrud<VehicleOwner>{
             PreparedStatement ps = conn.prepareStatement("select * from vehicle_owner where o_name like '%"+name+"%'");
             ResultSet rs = ps.executeQuery();
             return vehicleOwnerMapper.resultSetToList(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void updateUI(String name, Long id) {
+        try {
+            PreparedStatement ps = conn.prepareStatement(UPDATE_VEHICLE_OWNER_BY_ID);
+            ps.setString(1,name);
+            ps.setInt(2,id.intValue());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<VehicleOwner> getTotalOwnerCommission(Date startDate, Date endDate) {
+        try {
+            PreparedStatement ps = conn.prepareStatement(SqlQueryConstant.GET_TOTAL_COMMISSION);
+            ps.setDate(1, startDate);
+            ps.setDate(2, endDate);
+            ResultSet rs = ps.executeQuery();
+            return vehicleOwnerMapper.ResultSetToList(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<VehicleOwner> getDataForComboBox(String id) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("select * from vehicle_owner vo inner join vehicle v on vo.id = v.owner_id where v.owner_id = ?");
+            ps.setString(1,id);
+            ResultSet rs = ps.executeQuery();
+            return vehicleOwnerMapper.ResultSetToList(rs);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

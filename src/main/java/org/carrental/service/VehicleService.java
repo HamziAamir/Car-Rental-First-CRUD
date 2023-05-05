@@ -1,7 +1,9 @@
 package org.carrental.service;
 
 import org.carrental.dao.VehicleDAO;
+import org.carrental.domain.Customer;
 import org.carrental.domain.Vehicle;
+import org.carrental.domain.VehicleOwner;
 
 
 import java.util.List;
@@ -49,4 +51,32 @@ public class VehicleService {
     public void delete(String id){
         dao.deleteByID(Long.parseLong(id));
     }
+    public void update(String name, Long id) {
+        dao.updateUI(name,id);
+    }
+
+    public String[][] getAvailableVehicles() {
+        List<Vehicle> vehicleList = dao.getAvailableVehicle();
+        return transformToJTable(vehicleList,6);
+    }
+
+    public String[] getVehicleDataForComboBox() {
+        List<Vehicle> vehicleList =dao.getDataForComboBox();
+        return convertVehicleListToArray(vehicleList);
+    }
+
+    private String[] convertVehicleListToArray(List<Vehicle> vehicleList) {
+        String[] data = new String[vehicleList.size()];
+
+        for (int i = 0; i < vehicleList.size(); i++) {
+            data[i] = vehicleList.get(i).getId()+","+vehicleList.get(i).getV_name();
+        }
+        return data;
+    }
+    public String getOwnerIdForComboBox(String id){
+        List<Vehicle> vehicleList = dao.getOwnerInfoForComboBox(id);
+        String data = vehicleList.get(0).getOwnerId();
+        return data;
+    }
+
 }

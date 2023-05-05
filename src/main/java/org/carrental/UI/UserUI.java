@@ -53,7 +53,10 @@ public class UserUI {
             frame.dispose();
             new DeleteUserUI();
         });
-
+        editbt.addActionListener((event)->{
+            frame.dispose();
+            new EditUserUI();
+        });
         searchtf.addKeyListener(new KeyListener() {
 
             @Override

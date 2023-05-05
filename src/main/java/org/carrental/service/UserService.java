@@ -42,7 +42,10 @@ public class UserService {
     }
 
 
-        public void delete(String id){
+    public void delete(String id){
             dao.deleteByID(Long.parseLong(id));
         }
+    public void update(String name, Long id) {
+        dao.updateUI(name,id);
+    }
 }

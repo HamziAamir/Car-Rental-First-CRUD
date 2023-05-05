@@ -3,7 +3,11 @@ package org.carrental.service;
 import org.carrental.dao.CustomerDAO;
 import org.carrental.domain.Customer;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
+
+import static org.carrental.dao.SqlQueryConstant.UPDATE_CUSTOMER_BY_ID;
 
 public class CustomerService {
     CustomerDAO dao = new CustomerDAO();
@@ -45,5 +49,8 @@ public class CustomerService {
     }
     public void delete(String id){
         dao.deleteByID(Long.parseLong(id));
+    }
+    public void update(String name, Long id) {
+        dao.updateUI(name,id);
     }
 }

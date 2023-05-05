@@ -12,6 +12,8 @@ public class HomeUI {
         JButton vehiclebtn = new JButton("Vehicle");
         JButton vehicleownerbtn = new JButton("Vehicle Owner");
         JButton bookingbtn = new JButton("Booking");
+        JButton reportsbtn = new JButton("Reports");
+
         JButton userbtn = new JButton("User");
         JButton logoutbtn = new JButton("Logout");
 
@@ -20,6 +22,7 @@ public class HomeUI {
         frame.add(vehiclebtn);
         frame.add(vehicleownerbtn);
         frame.add(bookingbtn);
+        frame.add(reportsbtn);
         frame.add(userbtn);
         frame.add(logoutbtn);
 
@@ -53,5 +56,10 @@ public class HomeUI {
             frame.dispose();
             new BookingUI();
         });
+        reportsbtn.addActionListener((event)->{
+            frame.dispose();
+            new ReportsUI();
+        });
+
     }
 }

@@ -94,4 +94,15 @@ public class UserDAO extends BaseDAO implements ICrud<User>{
             throw new RuntimeException(e);
         }
     }
+    public void updateUI(String name, Long id) {
+        try {
+            PreparedStatement ps = conn.prepareStatement(UPDATE_USER_BY_ID);
+            ps.setString(1,name);
+            ps.setInt(2,id.intValue());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

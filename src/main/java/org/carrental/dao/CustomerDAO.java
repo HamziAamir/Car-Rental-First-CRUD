@@ -93,12 +93,25 @@ public class CustomerDAO extends BaseDAO implements ICrud<Customer>{
             throw new RuntimeException(e);
         }
     }
-//    public void deleteByName(String name) {
-//        try {
-//            PreparedStatement ps = conn.prepareStatement("delete from customer where c_name = "+name);
-//            ps.executeUpdate();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    public void updateUI(String name, Long id) {
+        try {
+            PreparedStatement ps = conn.prepareStatement(UPDATE_CUSTOMER_BY_ID);
+            ps.setString(1,name);
+            ps.setInt(2,id.intValue());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Customer> getDataForComboBox() {
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("select * from customer ");
+            return customerMapper.resultSetToList(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

@@ -30,7 +30,7 @@ public class VehicleUI {
         eastpanel.add(deletebt);
         eastpanel.add(backbt);
         String data[][]= vehicleService.getAllVehicleForJTable();
-        String column[]={"ID","NAME","PHONE_NUMBER","CNIC","ADDRESS","Commission"};
+        String column[]={"ID","Vehicle NAME","Model","Brand","Colour","Owner ID"};
         JTable jt=new JTable(data,column);
         JScrollPane sp=new JScrollPane(jt);
         centerpanel.add(sp,BorderLayout.CENTER);
@@ -54,6 +54,10 @@ public class VehicleUI {
         deletebt.addActionListener((event)->{
             frame.dispose();
             new DeleteVehicleUI();
+        });
+        editbt.addActionListener((event)->{
+            frame.dispose();
+            new EditVehicleUI();
         });
         searchtf.addKeyListener(new KeyListener() {
 
