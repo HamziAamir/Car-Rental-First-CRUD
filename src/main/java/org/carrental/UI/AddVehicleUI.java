@@ -9,6 +9,7 @@ import java.awt.*;
 public class AddVehicleUI {
 
     private final VehicleService vehicleService = new VehicleService();
+    private final VehicleOwnerService vehicleOwnerService = new VehicleOwnerService();
     public AddVehicleUI(){
         JFrame frame = new JFrame("Car Rental APP - ADD Vehicle");
         frame.setLayout(new GridLayout(6,4,10,10));
@@ -26,8 +27,9 @@ public class AddVehicleUI {
         JTextField colorTf = new JTextField(20);
 
         JLabel ownerIdLb = new JLabel("Owner id");
-        JTextField ownerIdTf = new JTextField(20);
-
+        String[] vehicleOwnerOptions = vehicleOwnerService.getOwnerDataForYearlyReportComboBox();
+        JComboBox<String> vehicleOwnerComboBox = new JComboBox<>(vehicleOwnerOptions);
+        vehicleOwnerComboBox.setSize(20,10);
         JButton back = new JButton("BACK");
         JButton save = new JButton("SAVE");
 
@@ -40,7 +42,7 @@ public class AddVehicleUI {
         frame.add(colorLb);
         frame.add(colorTf);
         frame.add(ownerIdLb);
-        frame.add(ownerIdTf);
+        frame.add(vehicleOwnerComboBox);
         frame.add(save);
         frame.add(back);
 
@@ -50,10 +52,12 @@ public class AddVehicleUI {
         });
 
         save.addActionListener(e->{
-
+            String vehicleOwnerInput = (String) vehicleOwnerComboBox.getSelectedItem();
+            String[] vehicleOwnerParts = vehicleOwnerInput.split(",");
+            String vehicleOwnerId = vehicleOwnerParts[0];
             try {
                 vehicleService.save(nameTf.getText(), Integer.parseInt(modelTf.getText()),
-                        brandTf.getText(), colorTf.getText(),ownerIdTf.getText());
+                        brandTf.getText(), colorTf.getText(),vehicleOwnerId);
                 frame.dispose();
                 new VehicleUI();
 

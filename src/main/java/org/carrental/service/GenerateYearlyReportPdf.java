@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 public class GenerateYearlyReportPdf {
-    public static void GenerateYearlyReportPdf(JTable jTable, String[][] data,int year,int[] profit) throws FileNotFoundException, DocumentException {
+    public static void GenerateYearlyReportPdf(JTable jTable,int year,int[] profit, String name,String name2) throws FileNotFoundException, DocumentException {
         Document document=new Document(PageSize.A4.rotate());
 
         PdfWriter.getInstance(document,new FileOutputStream("YearlyReport.pdf"));
@@ -22,6 +22,9 @@ public class GenerateYearlyReportPdf {
         PdfPTable pdfTable = new PdfPTable(jTable.getColumnCount());
         Paragraph paragraph = new Paragraph("YEARLY REPORT OF " +year+" \n\n\n");
         document.add(paragraph);
+
+        Paragraph paragraph1 = new Paragraph("\n"+name+" : " +name2+" \n\n\n");
+        document.add(paragraph1);
 
         for (int i = 0; i < jTable.getColumnCount(); i++) {
             pdfTable.addCell(new PdfPCell(new Paragraph(jTable.getColumnName(i))));
@@ -33,9 +36,9 @@ public class GenerateYearlyReportPdf {
         }
         document.add(pdfTable);
         Paragraph commissionPara = new Paragraph();
-        commissionPara.add("\nTOTAL SALE FROM THIS VEHICLE : " +profit[1]);
-        commissionPara.add("\nTOTAL COMMISSION GIVEN FROM THIS VEHICLE : " +profit[2]);
-        commissionPara.add("\nTOTAL PROFIT FROM THIS VEHICLE : " +profit[0]);
+        commissionPara.add("\nTOTAL SALE FROM THIS "+name+" : " +profit[1]);
+        commissionPara.add("\nTOTAL COMMISSION GIVEN TO THIS "+name+" : " +profit[2]);
+        commissionPara.add("\nTOTAL PROFIT FROM THIS "+name+" : " +profit[0]);
         document.add(commissionPara);
 
         document.close();

@@ -35,7 +35,7 @@ public class BookingUI {
 
 
         String [][] data= bookingService.getAllBookingForJTable();
-        String [] column={"ID","Customer ID","Vehicle ID","Booking Date","Complete Date","Price","Booking Status"};
+        String [] column={"ID","Customer","Vehicle","Booking Date","Complete Date","Price","Booking Status"};
         DefaultTableModel defaultTableModel = new DefaultTableModel(data,column);
         JTable jt=new JTable(data,column);
         JScrollPane sp=new JScrollPane(jt);

@@ -57,6 +57,6 @@ public class Main {
 //        vehicleOwnerDAO.getAll().forEach(System.out::println);
         /*UserDAO userDAO = new UserDAO();
         userDAO.getAll().forEach(System.out::println);*/
-        new BookingUI();
+        new LOGINUI();
     }
 }

@@ -43,9 +43,11 @@ public class MonthlyReportUi {
         JDatePanelImpl endDatePanel = new JDatePanelImpl(endModel,properties);
         JDatePickerImpl endDatePicker = new JDatePickerImpl(endDatePanel, new DateLabelFormatter());
         JButton generatePdfBtn = new JButton("Generate PDF");
+        JButton backBtn = new JButton("BACK");
         frame.add(startDatePicker);
         frame.add(endDatePicker);
         frame.add(generatePdfBtn);
+        frame.add(backBtn);
 
 
 
@@ -64,11 +66,11 @@ public class MonthlyReportUi {
                 java.sql.Date startSqlDate = new java.sql.Date(startDate.getTime());
                 java.sql.Date endSqlDate = new java.sql.Date(endDate.getTime());
                 String[][] data = bookingService.getByDateRange(startSqlDate, endSqlDate);
-                String[] column = {"ID", "CUSTOMER", "VEHICLE", "BOOKING DATE", "COMPLETE DATE", "AMOUNT", "STATUS"};
+                String[] column = {"ID", "CUSTOMER", "VEHICLE", "BOOKING DATE", "COMPLETE DATE","PRICE","DAYS", "TOTAL AMOUNT", "STATUS"};
                 JTable jt = new JTable(data, column);
                 jt.setBounds(50, 50, 300, 300);
                 List<Booking> comAndAmount = bookingService.getCommissionAndAmount(startSqlDate,endSqlDate);
-                GenerateMonthlyReportPdf.generatePdf(jt,comAndAmount);
+                GenerateMonthlyReportPdf.generatePdf(jt,comAndAmount,startSqlDate,endSqlDate);
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             } catch (DocumentException ex) {
@@ -92,6 +94,9 @@ public class MonthlyReportUi {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-
+        backBtn.addActionListener((event->{
+            frame.dispose();
+            new ReportsUI();
+        }));
     }
 }

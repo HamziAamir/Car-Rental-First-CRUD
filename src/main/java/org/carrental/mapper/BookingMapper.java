@@ -109,4 +109,61 @@ public class BookingMapper implements IMapper<Booking> {
         }
         return bookingList;
     }
+
+    public List<Booking> ResultSetToListOfOwnerYearlyReport(ResultSet rs) throws SQLException {
+        List<Booking> bookingList = new ArrayList<>();
+        while(rs.next()){
+            Booking booking = Booking.builder()
+                    .id(rs.getInt((ID)))
+                    .vid(rs.getInt(VEHICLE_ID))
+                    .bookingStatus(rs.getString("bookingStatus"))
+                    .bookingDate(rs.getDate(BOOKING_DATE))
+                    .completeDate(rs.getDate(COMPLETE_DATE))
+                    .price(rs.getDouble(PRICE))
+                    .totalAmount(rs.getInt("totalamount"))
+                    .commission(rs.getInt("total_commission"))
+                    .build();
+            bookingList.add(booking);
+        }
+        return bookingList;
+    }
+
+    public List<Booking> resultSetToListforTable(ResultSet rs) throws SQLException {
+        List<Booking> bookingList = new ArrayList<>();
+        while(rs.next()){
+            Booking booking = Booking.builder()
+                    .id (rs.getInt(ID))
+                    .cid(rs.getInt(CUSTOMER_ID))
+                    .customerName(rs.getString("c_name"))
+                    .vid(rs.getInt(VEHICLE_ID))
+                    .vehicleName(rs.getString("v_name"))
+                    .bookingDate(rs.getDate(BOOKING_DATE))
+                    .completeDate(rs.getDate(COMPLETE_DATE))
+                    .price(rs.getDouble(PRICE))
+                    .bookingStatus(rs.getString(BOOKING_STATUS))
+                    .build();
+            bookingList.add(booking);
+        }
+        return bookingList;
+    }
+    public List<Booking> resultSetToListForMonthlyReport(ResultSet rs) throws SQLException {
+        List<Booking> bookingList = new ArrayList<>();
+        while(rs.next()){
+            Booking booking = Booking.builder()
+                    .id (rs.getInt(ID))
+                    .cid(rs.getInt(CUSTOMER_ID))
+                    .customerName(rs.getString("c_name"))
+                    .vid(rs.getInt(VEHICLE_ID))
+                    .vehicleName(rs.getString("v_name"))
+                    .bookingDate(rs.getDate(BOOKING_DATE))
+                    .completeDate(rs.getDate(COMPLETE_DATE))
+                    .price(rs.getDouble(PRICE))
+                    .days(rs.getInt("days"))
+                    .total_Amount(rs.getDouble("totalAmount"))
+                    .bookingStatus(rs.getString(BOOKING_STATUS))
+                    .build();
+            bookingList.add(booking);
+        }
+        return bookingList;
+    }
 }

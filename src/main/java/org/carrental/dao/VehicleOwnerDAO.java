@@ -101,7 +101,7 @@ public class VehicleOwnerDAO extends BaseDAO implements ICrud<VehicleOwner>{
             ps.setDate(1, startDate);
             ps.setDate(2, endDate);
             ResultSet rs = ps.executeQuery();
-            return vehicleOwnerMapper.ResultSetToList(rs);
+            return vehicleOwnerMapper.ResultSetToListForCommissionReport(rs);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -109,7 +109,13 @@ public class VehicleOwnerDAO extends BaseDAO implements ICrud<VehicleOwner>{
 
     public List<VehicleOwner> getDataForComboBox(String id) {
         try {
-            PreparedStatement ps = conn.prepareStatement("select * from vehicle_owner vo inner join vehicle v on vo.id = v.owner_id where v.owner_id = ?");
+            PreparedStatement ps = conn.prepareStatement("SELECT vo.*\n" +
+                    "FROM vehicle_owner vo\n" +
+                    "WHERE vo.id IN (\n" +
+                    "  SELECT DISTINCT owner_id\n" +
+                    "  FROM vehicle\n" +
+                    "  WHERE owner_id = ?\n" +
+                    ")");
             ps.setString(1,id);
             ResultSet rs = ps.executeQuery();
             return vehicleOwnerMapper.ResultSetToList(rs);
@@ -117,4 +123,5 @@ public class VehicleOwnerDAO extends BaseDAO implements ICrud<VehicleOwner>{
             throw new RuntimeException(e);
         }
     }
+
 }

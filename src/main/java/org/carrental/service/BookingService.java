@@ -21,7 +21,7 @@ public class BookingService {
     VehicleDAO vehicleDAO = new VehicleDAO();
 
     public String[][] getAllBookingForJTable(){
-        List<Booking> bookingList = dao.getAll();
+        List<Booking> bookingList = dao.getAllforTable();
         return transformToJTable(bookingList,7);
     }
 
@@ -30,8 +30,8 @@ public class BookingService {
 
         for (int i = 0; i < bookingList.size() ; i++) {
             data[i][0] = String.valueOf(bookingList.get(i).getId());
-            data[i][1] = String.valueOf(bookingList.get(i).getCid());
-            data[i][2] = String.valueOf(bookingList.get(i).getVid());
+            data[i][1] = String.valueOf(bookingList.get(i).getCid())+","+bookingList.get(i).getCustomerName();
+            data[i][2] = String.valueOf(bookingList.get(i).getVid())+","+bookingList.get(i).getVehicleName();
             data[i][3] = String.valueOf(bookingList.get(i).getBookingDate());
             data[i][4] = String.valueOf(bookingList.get(i).getCompleteDate());
             data[i][5] = String.valueOf(bookingList.get(i).getPrice());
@@ -105,7 +105,25 @@ public class BookingService {
 
     public String[][] getByDateRange(Date startDate, Date endDate) {
         List<Booking> bookingList = dao.getByDateRange(startDate,endDate);
-        return transformToJTable(bookingList,7);
+        return transformToJTableForMonthlyReports(bookingList,9);
+    }
+
+    private String[][] transformToJTableForMonthlyReports(List<Booking> bookingList, int columnSize) {
+        String[][] data = new String[bookingList.size()][columnSize];
+
+        for (int i = 0; i < bookingList.size() ; i++) {
+            data[i][0] = String.valueOf(bookingList.get(i).getId());
+            data[i][1] = String.valueOf(bookingList.get(i).getCid())+","+bookingList.get(i).getCustomerName();
+            data[i][2] = String.valueOf(bookingList.get(i).getVid())+","+bookingList.get(i).getVehicleName();
+            data[i][3] = String.valueOf(bookingList.get(i).getBookingDate());
+            data[i][4] = String.valueOf(bookingList.get(i).getCompleteDate());
+            data[i][5] = String.valueOf(bookingList.get(i).getPrice());
+            data[i][6] = String.valueOf(bookingList.get(i).getDays());
+            data[i][7] = String.valueOf(bookingList.get(i).getTotal_Amount());
+            data[i][8] = bookingList.get(i).getBookingStatus();
+
+        }
+        return data;
     }
 
     public List<Booking> getCommissionAndAmount(Date startDate, Date endDate) {
@@ -114,11 +132,12 @@ public class BookingService {
 
     public String [][] getMaxCardata(Date startDate , Date endDate) {
         List<Booking> maxCarBooking = dao.getMaxBookingOfCar(startDate,endDate);
-        return TransformToJTableForMinMax(maxCarBooking,2);
+            return TransformToJTableForMinMax(maxCarBooking, 2);
+
     }
     public String [][] getMinCardata(Date startDate , Date endDate) {
         List<Booking> maxCarBooking = dao.getMinBookingOfCar(startDate,endDate);
-        return TransformToJTableForMinMax(maxCarBooking,2);
+            return TransformToJTableForMinMax(maxCarBooking, 2);
     }
     public List<Booking> getTotalCommissionAndAmount(Date startDate , Date endDate) {
         return dao.getTotalCommissionAndAmount(startDate,endDate);
@@ -139,12 +158,19 @@ public class BookingService {
 //    }
 
     public String[][] getMinMaxCarData(String[][] minCarData , String [][] maxCarData, Date startDate , Date endDate){
-        String [][] Data = new String[1][4];
-        Data[0][0] = maxCarData[0][0]+","+maxCarData[0][1];
-        Data[0][1] = minCarData[0][0]+","+minCarData[0][1];
-        Data[0][2] = String.valueOf(CalculateProfit(getTotalCommissionAndAmount(startDate,endDate)))+","+MaxProfitVehicleIdAndName(getTotalCommissionAndAmount(startDate,endDate));
-        Data[0][3] = String.valueOf(CalculateCommission(getMaxCommisionData(startDate,endDate)))+","+MaxCommissionIdAndName(getTotalCommissionAndAmount(startDate,endDate));
+        String [][] Data;
 
+        try{
+            Data = new String[1][4];
+            Data[0][0] = maxCarData[0][0] + "," + maxCarData[0][1];
+            Data[0][1] = minCarData[0][0] + "," + minCarData[0][1];
+            Data[0][2] = String.valueOf(CalculateProfit(getTotalCommissionAndAmount(startDate, endDate))) + "," + MaxProfitVehicleIdAndName(getTotalCommissionAndAmount(startDate, endDate));
+            Data[0][3] = String.valueOf(CalculateCommission(getMaxCommisionData(startDate, endDate))) + "," + MaxCommissionIdAndName(getTotalCommissionAndAmount(startDate, endDate));
+        }catch(NullPointerException e){
+            System.out.println("NullPointerException occurred: " + e.getMessage());
+            return Data = new String[0][0];
+
+        }
         return Data;
     }
     private String[][] TransformToJTableForMinMax(List<Booking> maxCarBooking, int columnSize) {
@@ -161,75 +187,95 @@ public class BookingService {
 //    Integer profit = amount-commission;
     int CalculateProfit(List <Booking> CommissionAndProfit ){
         int profit;
-        int [] prof = new int[CommissionAndProfit.size()];
-        for (int i = 0 ;i<CommissionAndProfit.size(); i ++){
-            prof[i] = CommissionAndProfit.get(i).getTotalAmount() - CommissionAndProfit.get(i).getCommission() ;
-        }
-        int max = 0;
-        int maxindex = 0;
-        for (int i = 0 ; i<prof.length ; i ++){
-            if(prof[i] > max){
-                max= prof[i];
-                maxindex = i;
+        if(CommissionAndProfit != null){
+            int [] prof = new int[CommissionAndProfit.size()];
+            for (int i = 0 ;i<CommissionAndProfit.size(); i ++){
+                prof[i] = CommissionAndProfit.get(i).getTotalAmount() - CommissionAndProfit.get(i).getCommission() ;
             }
+            int max = 0;
+            int maxindex = 0;
+            for (int i = 0 ; i<prof.length ; i ++){
+                if(prof[i] > max){
+                    max= prof[i];
+                    maxindex = i;
+                }
+            }
+            profit = Arrays.stream(prof).max().getAsInt();
+            return profit;
         }
-        profit = Arrays.stream(prof).max().getAsInt();
+        else{
+          return  profit = 0;
+        }
 
-        return profit;
     }
     int CalculateCommission(List <Booking> CommissionAndProfit ){
         int commission;
-        int [] comm = new int[CommissionAndProfit.size()];
-        for (int i = 0 ;i<CommissionAndProfit.size(); i ++){
-            comm[i] = CommissionAndProfit.get(i).getCommission() ;
-        }
-        int max = 0;
-        int maxcommindex = 0;
-        for (int i = 0 ; i<comm.length ; i ++){
-            if(comm[i] > max){
-                max= comm[i];
-                maxcommindex = i;
+        if(CommissionAndProfit !=null) {
+            int[] comm = new int[CommissionAndProfit.size()];
+            for (int i = 0; i < CommissionAndProfit.size(); i++) {
+                comm[i] = CommissionAndProfit.get(i).getCommission();
             }
+            int max = 0;
+            int maxcommindex = 0;
+            for (int i = 0; i < comm.length; i++) {
+                if (comm[i] > max) {
+                    max = comm[i];
+                    maxcommindex = i;
+                }
+            }
+            commission = Arrays.stream(comm).max().getAsInt();
+            return commission;
         }
-        commission = Arrays.stream(comm).max().getAsInt();
-
-        return commission;
+        else{
+            return commission = 0;
+        }
     }
     String MaxCommissionIdAndName(List <Booking> CommissionAndProfit){
-        int commission;
-        int [] comm = new int[CommissionAndProfit.size()];
-        for (int i = 0 ;i<CommissionAndProfit.size(); i ++){
-            comm[i] = CommissionAndProfit.get(i).getCommission() ;
-        }
-        int max = 0;
-        int maxcommindex = 0;
-        for (int i = 0 ; i<comm.length ; i ++){
-            if(comm[i] > max){
-                max= comm[i];
-                maxcommindex = i;
+        int commission; String nameAndId;
+        if(CommissionAndProfit != null) {
+            int[] comm = new int[CommissionAndProfit.size()];
+            for (int i = 0; i < CommissionAndProfit.size(); i++) {
+                comm[i] = CommissionAndProfit.get(i).getCommission();
             }
-        }
+            int max = 0;
+            int maxcommindex = 0;
+            for (int i = 0; i < comm.length; i++) {
+                if (comm[i] > max) {
+                    max = comm[i];
+                    maxcommindex = i;
+                }
+            }
 
-        String nameAndId = CommissionAndProfit.get(maxcommindex).getVid()+","+CommissionAndProfit.get(maxcommindex).getVehicleName();
-        return nameAndId;
+             nameAndId = CommissionAndProfit.get(maxcommindex).getVid() + "," + CommissionAndProfit.get(maxcommindex).getVehicleName();
+            return nameAndId;
+        }
+        else{
+            return nameAndId = null;
+        }
     }
     String MaxProfitVehicleIdAndName(List <Booking> CommissionAndProfit){
         int profit;
-        int [] prof = new int[CommissionAndProfit.size()];
-        for (int i = 0 ;i<CommissionAndProfit.size(); i ++){
-            prof[i] = CommissionAndProfit.get(i).getTotalAmount() - CommissionAndProfit.get(i).getCommission() ;
-        }
-        int max = 0;
-        int maxindex = 0;
-        for (int i = 0 ; i<prof.length ; i ++){
-            if(prof[i] > max){
-                max= prof[i];
-                maxindex = i;
+        String nameAndId;
+        if(CommissionAndProfit != null){
+            int [] prof = new int[CommissionAndProfit.size()];
+            for (int i = 0 ;i<CommissionAndProfit.size(); i ++){
+                prof[i] = CommissionAndProfit.get(i).getTotalAmount() - CommissionAndProfit.get(i).getCommission() ;
             }
+            int max = 0;
+            int maxindex = 0;
+            for (int i = 0 ; i<prof.length ; i ++){
+                if(prof[i] > max){
+                    max= prof[i];
+                    maxindex = i;
+                }
+            }
+            profit = Arrays.stream(prof).max().getAsInt();
+            nameAndId = CommissionAndProfit.get(maxindex).getVid()+","+CommissionAndProfit.get(maxindex).getVehicleName();
+            return nameAndId;
         }
-        profit = Arrays.stream(prof).max().getAsInt();
-        String nameAndId = CommissionAndProfit.get(maxindex).getVid()+","+CommissionAndProfit.get(maxindex).getVehicleName();
-        return nameAndId;
+        else{
+            return nameAndId = null;
+        }
     }
 
     public String[] getDateByYear(int year) {
@@ -305,6 +351,59 @@ public class BookingService {
             data[i][4] = String.valueOf(bookingList.get(i).getTotalAmount());
             data[i][5] = String.valueOf(bookingList.get(i).getCommission());
         }
+        return data;
+    }
+
+    public String[][] getDataForOwnerYearlyReport(String id, String startDate, String endDate) {
+        List<Booking> bookingList = null;
+        try {
+            bookingList = dao.getDataForOwnerYearlyReport(id,startDate,endDate);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return convertOwnerListToArrayForYearlyReport(bookingList);
+    }
+
+    private String[][] convertOwnerListToArrayForYearlyReport(List<Booking> bookingList) {
+        String[][] data = new String[bookingList.size()][8];
+
+        for (int i = 0; i < bookingList.size(); i++) {
+            data[i][0] = String.valueOf(bookingList.get(i).getId());
+            data[i][1] = String.valueOf(bookingList.get(i).getVid());
+            data[i][2] = String.valueOf(bookingList.get(i).getBookingStatus());
+            data[i][3] = String.valueOf(bookingList.get(i).getBookingDate());
+            data[i][4] = String.valueOf(bookingList.get(i).getCompleteDate());
+            data[i][5] = String.valueOf(bookingList.get(i).getPrice());
+            data[i][6] = String.valueOf(bookingList.get(i).getTotalAmount());
+            data[i][7] = String.valueOf(bookingList.get(i).getCommission());
+        }
+        return data;
+    }
+
+    public int[] getOwnerProfitForYearly(String ownerId, String startDate, String endDate) {
+        List<Booking> bookingList = null;
+        try {
+            bookingList = dao.getDataForOwnerYearlyReport(ownerId,startDate,endDate);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        int [] totalAmount = new int[bookingList.size()];
+        int [] commission = new int[bookingList.size()];
+        for (int i =0 ; i<bookingList.size();i++){
+            totalAmount[i] = bookingList.get(i).getTotalAmount();
+            commission[i] = bookingList.get(i).getCommission();
+        }
+        int totalAmountSum = 0,totalCommissionSum = 0;
+        for (int j = 0 ; j<totalAmount.length ; j++){
+            totalAmountSum += totalAmount[j];
+            totalCommissionSum += commission[j];
+        }
+
+        int profit = totalAmountSum - totalCommissionSum;
+        int [] data = new int[3];
+        data[0] = profit;
+        data[1] = totalAmountSum;
+        data[2] = totalCommissionSum;
         return data;
     }
 }

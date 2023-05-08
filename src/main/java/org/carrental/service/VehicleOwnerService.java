@@ -11,7 +11,7 @@ public class VehicleOwnerService {
     VehicleOwnerDAO dao = new VehicleOwnerDAO();
     public String[][] searchByName(String name){
         List<VehicleOwner> vehicleOwnerList = dao.getByName(name);
-        return transformToJTable(vehicleOwnerList,5);
+        return transformToJTable(vehicleOwnerList,6);
     }
 
     public String[][] getAllVehicleOwnerForJTable(){
@@ -39,9 +39,14 @@ public class VehicleOwnerService {
         for (int i = 0; i < vehicleOwnerList.size() ; i++) {
             data[i][0] = String.valueOf(vehicleOwnerList.get(i).getID());
             data[i][1] = vehicleOwnerList.get(i).getO_name();
-            data[i][2] = vehicleOwnerList.get(i).getPhoneNumber();
-            data[i][3] = vehicleOwnerList.get(i).getAddress();
-            data[i][4] = String.valueOf(vehicleOwnerList.get(i).getCommission());
+            data[i][2] = vehicleOwnerList.get(i).getVehicleName();
+            data[i][3] = vehicleOwnerList.get(i).getPhoneNumber();
+            data[i][4] = vehicleOwnerList.get(i).getAddress();
+            data[i][5] = String.valueOf(vehicleOwnerList.get(i).getDays());
+            data[i][6] = String.valueOf(vehicleOwnerList.get(i).getPrice());
+            data[i][7] = String.valueOf(vehicleOwnerList.get(i).getCommission());
+            data[i][8] = String.valueOf(vehicleOwnerList.get(i).getTotalAmount());
+            data[i][9] = String.valueOf(vehicleOwnerList.get(i).getCommissionGiven());
         }
         return data;
     }
@@ -66,7 +71,7 @@ public class VehicleOwnerService {
 
     public String[][] getTotalCommission(Date startDate, Date endDate) {
         List<VehicleOwner> vehicleOwnerList = dao.getTotalOwnerCommission(startDate,endDate);
-        return  transformToJTableForReports(vehicleOwnerList,5);
+        return  transformToJTableForReports(vehicleOwnerList,10);
     }
 
     public String[] getOwnerDataForComboBox(String id) {
@@ -83,4 +88,8 @@ public class VehicleOwnerService {
         return data;
     }
 
+    public String[] getOwnerDataForYearlyReportComboBox() {
+        List<VehicleOwner> vehicleOwnerList =dao.getAll();
+        return convertVehicleListToArray(vehicleOwnerList);
+    }
 }

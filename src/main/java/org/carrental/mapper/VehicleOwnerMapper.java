@@ -68,4 +68,24 @@ public class VehicleOwnerMapper implements IMapper<VehicleOwner>{
         }
     }
 
+    public List<VehicleOwner> ResultSetToListForCommissionReport(ResultSet rs) throws SQLException {
+
+        List<VehicleOwner> vehicleOwnerList = new ArrayList<>();
+        while (rs.next()) {
+            VehicleOwner vehicleOwner = VehicleOwner.builder()
+                    .ID((int) rs.getLong(ID))
+                    .o_name(rs.getString(O_NAME))
+                    .vehicleName(rs.getString("v_name"))
+                    .phoneNumber(rs.getString(PHONE_NUMBER))
+                    .address(rs.getString(ADDRESS))
+                    .days(rs.getInt("days"))
+                    .price(rs.getFloat("price"))
+                    .commission(rs.getFloat(COMMISION))
+                    .totalAmount(rs.getFloat("total_amount"))
+                    .commissionGiven(rs.getFloat("CommissionGiven"))
+                    .build();
+            vehicleOwnerList.add(vehicleOwner);
+        }
+        return vehicleOwnerList;
+    }
 }

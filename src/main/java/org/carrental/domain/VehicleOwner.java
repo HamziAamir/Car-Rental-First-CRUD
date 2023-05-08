@@ -16,5 +16,10 @@ public class VehicleOwner {
     private String address;
     private float commission;
 
+    private String vehicleName;
+    private int days;
+    private float price;
+    private float commissionGiven;
+    private float totalAmount;
 
 }

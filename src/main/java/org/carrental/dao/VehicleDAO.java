@@ -111,7 +111,7 @@ public class VehicleDAO extends BaseDAO implements ICrud<Vehicle> {
     }
     public List<Vehicle> getOwnerInfoForComboBox(String id) {
         try {
-            PreparedStatement ps = conn.prepareStatement("select * from vehicle where owner_id = ?");
+            PreparedStatement ps = conn.prepareStatement("select * from vehicle where id = ?");
             ps.setString(1,id);
             ResultSet resultSet = ps.executeQuery();
             return vehicleMapper.resultSetToList(resultSet);

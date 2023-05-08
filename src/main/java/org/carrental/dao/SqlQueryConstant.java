@@ -48,29 +48,32 @@ public class SqlQueryConstant {
                     "values (?,?,?,?)";
     public final static String UPDATE_BOOKING_BY_ID =
             "update booking set cid = ? , vid = ? , booking_date = ? , price = ? where id = ? ";
-    public final static  String GET_BY_DATE_RANGE = "select b.id , c.id as cid , v.id as vid" +
-            " , b.booking_date , b.complete_date , (DATEDIFF(b.complete_date , b.booking_date))*b.price as price," +
-            " b.booking_status\n" + "from booking b\n" +
-            "inner join customer c on b.cid = c.id\n" +
-            "inner join vehicle v on b.vid = v.id\n" +
-            "where (b.booking_date Between ? And ?) AND b.booking_status = 'Complete'";
+    public final static  String GET_BY_DATE_RANGE = "select b.id , c.id as cid,c.c_name, v.id as vid,v.v_name\n" +
+            "             , b.booking_date , b.complete_date ,b.price,DATEDIFF(b.complete_date , b.booking_date) as days, \n" +
+            "             (DATEDIFF(b.complete_date , b.booking_date))*b.price as totalAmount,\n" +
+            "             b.booking_status from booking b \n" +
+            "            inner join customer c on b.cid = c.id\n" +
+            "            inner join vehicle v on b.vid = v.id\n" +
+            "            where (b.booking_date Between ? And ?) AND b.booking_status = 'Complete'";
     public final static String GET_COMMISSION_AND_AMOUNT = "select sum(DATEDIFF(b.complete_date , " +
             "b.booking_date)*b.price) as total_amount , Sum(o.commision*(DATEDIFF(b.complete_date ," +
             " b.booking_date)*b.price)/100) as total_commission  from booking b \n" +
             "    inner join vehicle v on v.id=b.vid\n" +
             "    inner join vehicle_owner o on o.id = v.owner_id\n" +
             "    where (b.booking_date Between ? And ?) AND b.booking_status = 'Complete' ";
-    public static final String GET_TOTAL_COMMISSION = "select o.id , o.o_name , o.phone_number, o.address , sum(b.price*o.commision/100) as commision from booking b\n" +
-            "inner join vehicle v on v.id = b.vid\n" +
+    public static final String GET_TOTAL_COMMISSION = "select o.id , o.o_name ,v.v_name, o.phone_number, o.address,DATEDIFF(b.complete_date , b.booking_date) as days,b.price,o.commision,sum(DATEDIFF(b.complete_date,b.booking_date)*b.price) as total_amount,\n" +
+            "sum((DATEDIFF(b.complete_date ,b.booking_date)*b.price)*o.commision/100) as CommissionGiven \n" +
+            " from booking b\n" +
+            "inner join vehicle v on v.id = b.vid \n" +
             "inner join vehicle_owner o on v.owner_id = o.id\n" +
-            "where (b.booking_date between ? and ?) and b.booking_status = 'Complete'\n" +
-            "group by o.id, o.o_name";
+            "where (b.booking_date between ? and ? ) and b.booking_status = 'Complete'\n" +
+            "Group BY b.id";
     public static final String GET_AVAILABLE_VEHICLE ="select v.id , v.v_name , v.model , v.brand ,v.color , owner_id  from vehicle v\n" +
-            "left join booking b on b.vid = v.id\n" +
+            "inner join booking b on b.vid = v.id\n" +
             "where (b.vid is null or b.booking_status = 'Complete')\n" +
             "group by v.id";
-    public static final String MAX_CAR_BOOKING = "SELECT v.id as vid,v.v_name FROM vehicle v WHERE v.id = ( SELECT min(b.vid) FROM booking b WHERE (b.booking_status = 'Complete'))";
-    public static final String MIN_CAR_BOOKING = "SELECT v.id as vid,v.v_name FROM vehicle v WHERE v.id = ( SELECT MAX(b.vid) FROM booking b WHERE (b.booking_status = 'Complete'))";
+    public static final String MAX_CAR_BOOKING = "SELECT v.id as vid,v.v_name FROM vehicle v WHERE v.id = ( SELECT min(b.vid) FROM booking b WHERE  (b.booking_status = 'Complete'))";
+    public static final String MIN_CAR_BOOKING = "SELECT v.id as vid,v.v_name FROM vehicle v WHERE v.id = ( SELECT MAX(b.vid) FROM booking b WHERE  (b.booking_status = 'Complete'))";
 
     public final static String GET_TOTAL_COMMISSION_AND_TOTAL_AMOUNT = "select b.vid,v.v_name, DATEDIFF(b.complete_date ,b.booking_date)*b.price AS total_amount,\n" +
             "o.commision*(DATEDIFF(b.complete_date, b.booking_date)*b.price)/100 as total_commission\n" +

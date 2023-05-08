@@ -51,7 +51,7 @@ public class ReportsUI {
         });
         backbtn.addActionListener((event)->{
             frame.dispose();
-            new ReportsUI();
+            new HomeUI();
         });
     }
 }

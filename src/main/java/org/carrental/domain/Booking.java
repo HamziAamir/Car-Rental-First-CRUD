@@ -13,12 +13,15 @@ import java.text.DateFormat;
 public class Booking {
     private int id;
     private int cid;
+    private String customerName;
     private int vid;
+    private String vehicleName;
     private Date bookingDate;
     private Date completeDate;
     private Double price;
     private String bookingStatus;
-    Integer totalAmount;
-    Integer commission;
-    private String vehicleName;
+    private Integer totalAmount;
+    private Integer commission;
+    private Double total_Amount;
+    private Integer days;
 }

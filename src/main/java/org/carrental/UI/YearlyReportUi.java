@@ -38,6 +38,11 @@ public class YearlyReportUi {
         vehicleComboBox.setSize(20,10);
         vehicleComboBox.setVisible(false);
 
+        String[] ownerOptions = vehicleOwnerService.getOwnerDataForYearlyReportComboBox();
+        JComboBox<String> ownerRbComboBox = new JComboBox<>(ownerOptions);
+        ownerRbComboBox.setSize(20,10);
+        ownerRbComboBox.setVisible(false);
+
         Integer [] yearOptions = {2023,2022,2021,2020,2019};
         JComboBox<Integer> yearComboBox = new JComboBox<>(yearOptions);
         yearComboBox.setSize(20,10);
@@ -46,23 +51,30 @@ public class YearlyReportUi {
         JButton genPDFbtn = new JButton("Generate PDF");
         genPDFbtn.setVisible(false);
 
+        JButton genPDFbtn1 = new JButton("Generate PDF");
+        genPDFbtn1.setVisible(false);
+
         JButton selectbtn = new JButton("Select");
         selectbtn.setVisible(false);
 
         centerpanel.add(vehicleComboBox);
+        centerpanel.add(ownerRbComboBox);
         centerpanel.add(selectbtn);
 
         eastpanel.add(genPDFbtn);
+        eastpanel.add(genPDFbtn1);
         eastpanel.add(refreshbt);
         eastpanel.add(backbt);
         vehicleRb.addActionListener((event->{
-
+            ownerRb.setVisible(false);
             vehicleComboBox.setVisible(true);
             selectbtn.setVisible(true);
         }));
         vehicleComboBox.addActionListener((event1->{
-
-            String[] vehicleOwnerOptions = vehicleOwnerService.getOwnerDataForComboBox(vehicleService.getOwnerIdForComboBox((String) vehicleComboBox.getSelectedItem()));
+            String vehicleInput = (String) vehicleComboBox.getSelectedItem();
+            String[] vehicleParts = vehicleInput.split(",");
+            String vehicleId = vehicleParts[0];
+            String[] vehicleOwnerOptions = vehicleOwnerService.getOwnerDataForComboBox(vehicleService.getOwnerIdForComboBox(vehicleId));
             JComboBox<String> ownerComboBox = new JComboBox<>(vehicleOwnerOptions);
             ownerComboBox.setSize(20,10);
             ownerComboBox.setVisible(false);
@@ -80,18 +92,39 @@ public class YearlyReportUi {
             }));
         }));
 
+        Integer [] yearOptions1 = {2023,2022,2021,2020,2019};
+        JComboBox<Integer> yearComboBox1 = new JComboBox<>(yearOptions1);
+        yearComboBox1.setSize(20,10);
+        yearComboBox1.setVisible(false);
+        centerpanel.add(yearComboBox1);
+        ownerRb.addActionListener((event->{
+
+            vehicleRb.setVisible(false);
+            ownerRbComboBox.setVisible(true);
+        }));
+        ownerRbComboBox.addActionListener((event)->{
+            centerpanel.add(yearComboBox);
+            yearComboBox1.setVisible(true);
+        });
+        yearComboBox1.addActionListener((event)->{
+            genPDFbtn1.setVisible(true);
+        });
+
         genPDFbtn.addActionListener((event3->{
-            int year = (int) yearComboBox.getSelectedItem();
-            JFrame innerFrame4 = new JFrame("Yearly Report Data");
+            int year = (int) yearComboBox1.getSelectedItem();
             String [] date = bookingService.getDateByYear(year);
-            String[][] data1 = bookingService.getDataForVehicleYearlyReport((String) vehicleComboBox.getSelectedItem(),date[0],date[1]);
-            int totalAmountCommissionAndProfit [] = bookingService.getProfitForYearly((String) vehicleComboBox.getSelectedItem(),date[0],date[1]);
+            String vehicleInput = (String) vehicleComboBox.getSelectedItem();
+            String[] vehicleParts = vehicleInput.split(",");
+            String vehicleId = vehicleParts[0];
+            String vehicleName = vehicleParts[1];
+            String[][] data1 = bookingService.getDataForVehicleYearlyReport(vehicleId,date[0],date[1]);
+            int totalAmountCommissionAndProfit [] = bookingService.getProfitForYearly(vehicleId,date[0],date[1]);
             String[] column1 = {"ID", "Booking Date", "Complete Date", "Price", "Total Amount", "Commission"};
             JTable jt1 = new JTable(data1, column1);
             jt1.setBounds(50, 50, 300, 300);
 
             try {
-                GenerateYearlyReportPdf.GenerateYearlyReportPdf(jt1 ,data1,year,totalAmountCommissionAndProfit);
+                GenerateYearlyReportPdf.GenerateYearlyReportPdf(jt1 ,year,totalAmountCommissionAndProfit,"VEHICLE",vehicleName);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (DocumentException e) {
@@ -109,6 +142,38 @@ public class YearlyReportUi {
             }
         }));
 
+        genPDFbtn1.addActionListener((event)->{
+            int year = (int) yearComboBox.getSelectedItem();
+            String ownerInput = (String) ownerRbComboBox.getSelectedItem();
+            String[] ownerParts = ownerInput.split(",");
+            String ownerId = ownerParts[0];
+            String ownerName = ownerParts[1];
+             String [] date = bookingService.getDateByYear(year);
+            String[][] data1 = bookingService.getDataForOwnerYearlyReport(ownerId,date[0],date[1]);
+            int totalAmountCommissionAndProfit [] = bookingService.getOwnerProfitForYearly(ownerId,date[0],date[1]);
+            String[] column1 = {"ID","Vehicle ID","Vehicle Name","Booking Date", "Complete Date", "Price", "Total Amount", "Commission"};
+            JTable jt1 = new JTable(data1, column1);
+            jt1.setBounds(50, 50, 300, 300);
+
+            try {
+                GenerateYearlyReportPdf.GenerateYearlyReportPdf(jt1 ,year,totalAmountCommissionAndProfit,"OWNER",ownerName);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (DocumentException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                File file = new File("YearlyReport.pdf");
+                if (file.exists()) {
+                    Desktop.getDesktop().open(file);
+                } else {
+                    System.out.println("The PDF report file does not exist!");
+                }
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+
+        });
         refreshbt.addActionListener((event->{
             frame.dispose();
             new YearlyReportUi();

@@ -23,8 +23,9 @@ public class CarAvailabilityReportUi {
         endModel.setSelected(true);
 
         JButton generatePdfBtn = new JButton("Generate PDF");
+        JButton backBtn = new JButton("BACK");
         frame.add(generatePdfBtn);
-
+        frame.add(backBtn);
 
         generatePdfBtn.addActionListener(e->{
             try {
@@ -61,6 +62,9 @@ public class CarAvailabilityReportUi {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-
+        backBtn.addActionListener((event->{
+            frame.dispose();
+            new ReportsUI();
+        }));
     }
 }

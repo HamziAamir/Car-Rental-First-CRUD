@@ -12,11 +12,12 @@ import org.carrental.domain.Booking;
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.sql.Date;
 import java.util.List;
 
 public class GenerateMonthlyReportPdf {
 
-    public static void generatePdf(JTable jTable , List<Booking> commissionAndAmount) throws FileNotFoundException, DocumentException {
+    public static void generatePdf(JTable jTable , List<Booking> commissionAndAmount, Date startDate, Date endDate) throws FileNotFoundException, DocumentException {
 
         Document document=new Document(PageSize.A4.rotate());
 
@@ -24,7 +25,8 @@ public class GenerateMonthlyReportPdf {
         document.open();
 
         PdfPTable pdfTable = new PdfPTable(jTable.getColumnCount());
-        Paragraph paragraph = new Paragraph("MONTHLY REPORT\n");
+        pdfTable.setTotalWidth(2000);
+        Paragraph paragraph = new Paragraph("MONTHLY REPORT\nStart Date : " + startDate+"  End Date : "+endDate +"\n\n");
         document.add(paragraph);
 
 

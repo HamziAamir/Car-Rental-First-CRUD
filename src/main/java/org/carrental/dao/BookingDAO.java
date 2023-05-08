@@ -97,7 +97,7 @@ public class BookingDAO extends BaseDAO implements ICrud<Booking>{
             ps.setDate(1, startDate);
             ps.setDate(2, endDate);
             ResultSet rs=ps.executeQuery();
-            return bookingMapper.resultSetToList(rs);
+            return bookingMapper.resultSetToListForMonthlyReport(rs);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -118,9 +118,10 @@ public class BookingDAO extends BaseDAO implements ICrud<Booking>{
     public List<Booking> getMaxBookingOfCar(Date startDate , Date endDate) {
         try {
             PreparedStatement ps = conn.prepareStatement(MAX_CAR_BOOKING);
-            ResultSet rs = ps.executeQuery();
+
 //            ps.setDate(1,startDate);
 //            ps.setDate(2,endDate);
+            ResultSet rs = ps.executeQuery();
             return bookingMapper.MaxMinCarsToList(rs);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -172,5 +173,31 @@ public class BookingDAO extends BaseDAO implements ICrud<Booking>{
         ResultSet rs = ps.executeQuery();
 
         return bookingMapper.ResultSetToListOfVehicleYearlyReport(rs);
+    }
+
+    public List<Booking> getDataForOwnerYearlyReport(String id, String startDate, String endDate) throws SQLException {
+        PreparedStatement ps = conn.prepareStatement("select b.id ,b.vid,v.v_name as bookingStatus,b.booking_date,b.complete_date,b.price,\n" +
+                "DATEDIFF(b.complete_date ,b.booking_date)*b.price as totalamount,\n" +
+                "o.commision*(DATEDIFF(b.complete_date, b.booking_date)*b.price)/100 as total_commission from booking b \n" +
+                "inner join vehicle v on v.id = b.vid \n" +
+                "inner join vehicle_owner o on o.id = v.owner_id \n" +
+                "where o.id = ? AND (b.complete_date Between ? And ? ) AND b.booking_status = 'Complete' ;");
+        ps.setString(1,id);
+        ps.setDate(2, Date.valueOf(startDate));
+        ps.setDate(3, Date.valueOf(endDate));
+        ResultSet rs = ps.executeQuery();
+
+        return bookingMapper.ResultSetToListOfOwnerYearlyReport(rs);
+    }
+
+    public List<Booking> getAllforTable() {
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("\n" +
+                    "select b.id,b.cid,c.c_name,b.vid,v.v_name,b.booking_date,b.complete_date,b.price,b.booking_status from booking b inner join vehicle v on v.id = b.vid inner join customer c on b.cid = c.id where b.booking_status != 'Inactive'");
+            return bookingMapper.resultSetToListforTable(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

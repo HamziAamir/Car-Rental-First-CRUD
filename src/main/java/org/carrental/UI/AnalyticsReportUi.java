@@ -40,16 +40,14 @@ public class AnalyticsReportUi {
         JDatePickerImpl endDatePicker = new JDatePickerImpl(endDatePanel, new DateLabelFormatter());
 
         JButton generatePdfBtn = new JButton("Generate PDF");
+        JButton backbtn = new JButton("BACK");
         frame.add(startDatePicker);
         frame.add(endDatePicker);
         frame.add(generatePdfBtn);
+        frame.add(backbtn);
 
         generatePdfBtn.addActionListener((event)->{
             try {
-//            List totalAmountAndCommission = (List) bookingService.getTotalCommissionAndAmount();
-//            String[][] data1 = bookingService.getMaxCardata();
-//            String[][] data2 = bookingService.getMinCardata();
-
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date startDate = null;
                 java.util.Date endDate;
@@ -63,9 +61,16 @@ public class AnalyticsReportUi {
                 java.sql.Date endSqlDate = new java.sql.Date(endDate.getTime());
 
                 String[] column = {"Max Car ID,Max Car Name", "Min Car ID Min Car Name", "Max Profit","Max Commission"};
-                JTable jt = new JTable(bookingService.getMinMaxCarData(bookingService.getMinCardata(startSqlDate, endSqlDate), bookingService.getMaxCardata(startSqlDate, endSqlDate), startSqlDate, endSqlDate), column);
+                String Data [][] = bookingService.getMinMaxCarData(bookingService.getMinCardata(startSqlDate, endSqlDate), bookingService.getMaxCardata(startSqlDate, endSqlDate), startSqlDate, endSqlDate);
+                if (Data[0][2] .equals("0,null")){
+                    Data[0][0] = "null";
+                    Data[0][1]="null";
+                    Data[0][2]="null";
+                    Data[0][3]="null";
+                }
+                JTable jt = new JTable(Data, column);
                 jt.setBounds(50, 50, 300, 300);
-                GenerateCarAnalyticsPdf.generatePdf(jt);
+                GenerateCarAnalyticsPdf.generatePdf(jt , startSqlDate,endSqlDate);
             }
 
                 catch(FileNotFoundException ex){
@@ -93,5 +98,9 @@ public class AnalyticsReportUi {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+        backbtn.addActionListener((event->{
+            new ReportsUI();
+        }));
     }
 }

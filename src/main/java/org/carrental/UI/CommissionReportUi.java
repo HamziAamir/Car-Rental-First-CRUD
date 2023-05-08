@@ -38,9 +38,11 @@ public class CommissionReportUi {
         JDatePanelImpl endDatePanel = new JDatePanelImpl(endModel,properties);
         JDatePickerImpl endDatePicker = new JDatePickerImpl(endDatePanel, new DateLabelFormatter());
         JButton generatePdfBtn = new JButton("Generate PDF");
+        JButton backBtn = new JButton("BACK");
         frame.add(startDatePicker);
         frame.add(endDatePicker);
         frame.add(generatePdfBtn);
+        frame.add(backBtn);
 
 
 
@@ -58,7 +60,7 @@ public class CommissionReportUi {
                 java.sql.Date startSqlDate = new java.sql.Date(startDate.getTime());
                 java.sql.Date endSqlDate = new java.sql.Date(endDate.getTime());
                 String[][] data = vehicleOwnerService.getTotalCommission(startSqlDate,endSqlDate);
-                String[] column = {"ID", "NAME", "PHONE NUMBER", "ADDRESS", "TOTAL COMMISSION"};
+                String[] column = {"ID", "OWNER\nNAME","VEHICLE NAME", "PHONE\nNUMBER", "ADDRESS", "DAYS","PRICE","COMMI-\nSSION","Total\nAmount","COMMI-\nSSION\nGIVEN"};
                 JTable jt = new JTable(data, column);
                 jt.setBounds(50, 50, 300, 300);
 
@@ -90,7 +92,10 @@ public class CommissionReportUi {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-
+        backBtn.addActionListener((event->{
+            frame.dispose();
+            new ReportsUI();
+        }));
     }
 
 }
